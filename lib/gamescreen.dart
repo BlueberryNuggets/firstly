@@ -12,12 +12,25 @@ class MyGameScreen extends StatefulWidget {
 
 //
 class _MyGameScreenState extends State<MyGameScreen> {
+  String answer = "";
   //DNA STRAND CREATION
   List<NitrogenousBase> dnaStrand = [
-    NitrogenousBase(baseType: "A"),
-    NitrogenousBase(baseType: "T")
+    NitrogenousBase(baseType: "A", answer: "",),
+    NitrogenousBase(baseType: "T", answer: "")
   ];
   String nucleotide = "";
+
+    void createBases() {
+      setState(() {
+        for (int i = 0; i <= 10; i++) {
+        dnaStrand.elementAt(i).answer == answer;
+      }});
+    }
+
+  String button1 = "A";
+  String button2 = "T";
+  String button3 = "C";
+  String button4 = "G";
 
   void createDNAstrand() {
     setState(
@@ -39,7 +52,7 @@ class _MyGameScreenState extends State<MyGameScreen> {
               nucleotide = "G";
             default:
           }
-          dnaStrand.add(NitrogenousBase(baseType: nucleotide));
+          dnaStrand.add(NitrogenousBase(baseType: nucleotide, answer:""));
         }
       },
     );
@@ -65,12 +78,34 @@ class _MyGameScreenState extends State<MyGameScreen> {
       ScrollController scrollController) {
     scrollController
         .animateTo(direction,
-            duration: Duration(seconds: seconds), curve: Curves.linear)
-        .then((value) {
-      direction = direction == max ? min : max;
-      animateToMaxMin(max, min, direction, seconds, scrollController);
+            duration: Duration(seconds: seconds), curve: Curves.linear);
+    //     .then((value) {
+    //   direction = direction == max ? min : max;
+    //   animateToMaxMin(max, min, direction, seconds, scrollController);
+    // });
+  }
+
+  void buttonA(){
+    setState(() {
+      answer = button1; 
     });
   }
+   void buttonT(){
+    setState(() {
+      answer = button2; 
+    });
+  }
+   void buttonC(){
+    setState(() {
+      answer = button3; 
+    });
+  }
+   void buttonG(){
+    setState(() {
+      answer = button4; 
+    });
+  }
+
 
   @override
   Widget build(BuildContext context) {
@@ -78,8 +113,9 @@ class _MyGameScreenState extends State<MyGameScreen> {
       body: Column(
         children: [
           Expanded(
+            flex: 4,
             child: Container(
-              color: Colors.blue[200],
+              color: Colors.pink[200],
               child: ListView.builder(
                 controller: _scrollController1,
                 scrollDirection: Axis.horizontal,
@@ -96,10 +132,10 @@ class _MyGameScreenState extends State<MyGameScreen> {
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceEvenly,
               children: [
-                MyButton(letter: "A"),
-                MyButton(letter: "T"),
-                MyButton(letter: "C"),
-                MyButton(letter: "G"),
+                MyButton(letter: button1, function: buttonA),
+                MyButton(letter: button2, function: buttonT),
+                MyButton(letter: button3, function: buttonC),
+                MyButton(letter: button4, function: buttonG),
               ],
             ),
           ),

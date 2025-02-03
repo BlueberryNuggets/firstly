@@ -2,23 +2,30 @@ import "package:flutter/material.dart";
 
 class NitrogenousBase extends StatefulWidget {
   final String baseType;
-  const NitrogenousBase({required this.baseType, super.key});
-
+  final String answer;
+  const NitrogenousBase({required this.baseType, required this.answer, super.key});
+ 
   @override
   State<NitrogenousBase> createState() => _NitrogenousBaseState();
 }
 
 class _NitrogenousBaseState extends State<NitrogenousBase> {
-  Color baseColor = Colors.red;
   String complementaryBaseType = "";
   List<Color> dnabaseColor = [
     Colors.blue,
     Colors.amber,
     Colors.green,
-    Colors.deepPurple
+    Colors.deepPurple,
+    Colors.transparent
   ];
   int basecolorIndex = 0;
-  int complementcolorindex = 0;
+  int complementcolorindex = 4;
+
+@override
+  void initState() {
+    super.initState();
+    pairingChecker();
+    }
 
   //pairing function
   void pairingChecker() {
@@ -39,9 +46,6 @@ class _NitrogenousBaseState extends State<NitrogenousBase> {
         complementaryBaseType = "C";
         basecolorIndex = 3;
         complementcolorindex = 2;
-      } else {
-        complementaryBaseType = "ERROR";
-        baseColor = Colors.orange;
       }
     });
   }
@@ -56,14 +60,16 @@ class _NitrogenousBaseState extends State<NitrogenousBase> {
             color: dnabaseColor[basecolorIndex],
             alignment: Alignment.center,
             width: 50,
-            height: 500,
+            height: 100,
             child: Text(
               widget.baseType,
             ),
           ),
           Container(
-            color: dnabaseColor[complementcolorindex],
-            child: Text(complementaryBaseType),
+            color: dnabaseColor[4],
+            width: 50,
+            height: 200,
+            child: Text("?"),
           ),
         ],
       ),

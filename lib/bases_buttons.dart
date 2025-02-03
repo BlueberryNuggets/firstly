@@ -4,7 +4,7 @@ class MyButton extends StatelessWidget {
   final letter;
   final function;
 
-  MyButton({this.letter, this.function});
+  MyButton({this.letter, this.function, super.key});
 
   @override
   Widget build(BuildContext context) {
