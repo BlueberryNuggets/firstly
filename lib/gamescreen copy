@@ -1,0 +1,80 @@
+import "dart:math";
+import "package:flutter/material.dart";
+import "package:firstly/nitrogenous_base.dart";
+
+class MyGameScreen extends StatefulWidget {
+  const MyGameScreen({super.key});
+
+  @override
+  State<MyGameScreen> createState() => _MyGameScreenState();
+}
+
+class _MyGameScreenState extends State<MyGameScreen> {
+  bool startAnimation = false;
+  double screenWidth = 0;
+
+  //DNA STRAND CREATION
+  List<NitrogenousBase> dnaStrand = [
+    NitrogenousBase(baseType: "A"),
+    NitrogenousBase(baseType: "T")
+  ];
+  String nucleotide = "";
+
+  void createDNAstrand() {
+    setState(
+      () {
+        int randomNumber;
+        for (int i = 0; i <= 10; i++) {
+          randomNumber = Random().nextInt(4);
+          switch (randomNumber) {
+            case 0:
+              nucleotide = "A";
+              break;
+            case 1:
+              nucleotide = "T";
+              break;
+            case 2:
+              nucleotide = "C";
+              break;
+            case 3:
+              nucleotide = "G";
+            default:
+          }
+          dnaStrand.add(NitrogenousBase(baseType: nucleotide));
+        }
+      },
+    );
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    createDNAstrand();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      setState(() {
+        startAnimation = true;
+      });
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    screenWidth = MediaQuery.of(context).size.height;
+
+    return Scaffold(
+      body: ListView.builder(
+        // controller: _scrollController1,
+        scrollDirection: Axis.horizontal,
+        itemCount: dnaStrand.length,
+        itemBuilder: (context, index) {
+          return AnimatedContainer(
+              curve: Curves.easeIn,
+              duration: Duration(seconds: 10),
+              transform: Matrix4.translationValues(
+                  startAnimation ? 0 : screenWidth, 0, 0),
+              child: dnaStrand[index]);
+        },
+      ),
+    );
+  }
+}

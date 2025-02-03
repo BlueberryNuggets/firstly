@@ -1,0 +1,52 @@
+ //AUTOMATIC SCROLLER FUNCTION
+  // final ScrollController _scrollController1 = ScrollController();
+  // final ScrollController _scrollController2 = ScrollController();
+  // final ScrollController _scrollController3 = ScrollController();
+
+  // @override
+  // void initState() {
+  //   createDNAstrand();
+  //   super.initState();
+  //   WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+  //     double minScrollExtent1 = _scrollController1.position.minScrollExtent;
+  //     double maxScrollExtent1 = _scrollController1.position.maxScrollExtent;
+  //     double minScrollExtent2 = _scrollController2.position.minScrollExtent;
+  //     double maxScrollExtent2 = _scrollController2.position.maxScrollExtent;
+  //     double minScrollExtent3 = _scrollController3.position.minScrollExtent;
+  //     double maxScrollExtent3 = _scrollController3.position.maxScrollExtent;
+  //     //
+  //     animateToMaxMin(maxScrollExtent1, minScrollExtent1, maxScrollExtent1, 25,
+  //         _scrollController1);
+  //     animateToMaxMin(maxScrollExtent2, minScrollExtent2, maxScrollExtent2, 15,
+  //         _scrollController2);
+  //     animateToMaxMin(maxScrollExtent3, minScrollExtent3, maxScrollExtent3, 20,
+  //         _scrollController3);
+  //   });
+  // }
+
+  // animateToMaxMin(double max, double min, double direction, int seconds,
+  //     ScrollController scrollController) {
+  //   scrollController
+  //       .animateTo(direction,
+  //           duration: Duration(seconds: seconds), curve: Curves.linear)
+  //       .then((value) {
+  //     direction = direction == max ? min : max;
+  //     animateToMaxMin(max, min, direction, seconds, scrollController);
+  //   });
+  // }
+  // ScrollController scrollController = ScrollController();
+  // @override
+  // void initState() {
+  //   super.initState();
+  //   Future.delayed(const Duration(seconds: 1), () {
+  //     scrollController.animateTo(scrollController.position.maxScrollExtent,
+  //         duration: Duration(milliseconds: dnaStrand.length * 10),
+  //         curve: Curves.linear);
+  //   });
+  // }
+
+  // @override
+  // void dispose() {
+  //   scrollController.dispose();
+  //   super.dispose();
+  // }
