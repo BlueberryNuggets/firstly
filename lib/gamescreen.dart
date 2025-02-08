@@ -1,3 +1,4 @@
+// gamescreen.dart
 import "dart:math";
 import "package:firstly/bases_buttons.dart";
 import "package:flutter/material.dart";
@@ -13,6 +14,7 @@ class MyGameScreen extends StatefulWidget {
 class _MyGameScreenState extends State<MyGameScreen> {
   int answerItem = 0;
   List<NitrogenousBase> dnaStrand = [];
+  int score = 0; // Initialize score to 0
 
   @override
   void initState() {
@@ -42,36 +44,14 @@ class _MyGameScreenState extends State<MyGameScreen> {
         }
         dnaStrand.add(NitrogenousBase(baseType: nucleotide, baseChosen: ""));
       }
+      answerItem = 0; // Reset answerItem when creating a new strand
+      score = 0; // Reset score when creating a new strand
     });
   }
-
 
   final ScrollController _scrollController1 = ScrollController();
   int speedControl = 5;
 
-  // @override
-  // void initState() {
-  //   super.initState();
-  //   createDNAstrand();
-  // //   WidgetsBinding.instance.addPostFrameCallback((timestamp) {
-  // //     double minScrollExtent1 = _scrollController1.position.minScrollExtent;
-  // //     double maxScrollExtent1 = _scrollController1.position.maxScrollExtent;
-
-  // //     animateToMaxMin(maxScrollExtent1, minScrollExtent1, maxScrollExtent1,
-  // //         speedControl, _scrollController1);
-  // //   });
-  // // }
-
-  // // animateToMaxMin(double max, double min, double direction, int seconds,
-  // //     ScrollController scrollController) {
-  // //   scrollController
-  // //       .animateTo(direction,
-  // //           duration: Duration(seconds: seconds), curve: Curves.linear);
-  //   //     .then((value) {
-  //   //   direction = direction == max ? min : max;
-  //   //   animateToMaxMin(max, min, direction, seconds, scrollController);
-  //   // });
-  // }
 
   void adenine() {
     _updateBaseAtIndex(answerItem, "A");
@@ -89,19 +69,39 @@ class _MyGameScreenState extends State<MyGameScreen> {
     _updateBaseAtIndex(answerItem, "C");
   }
 
- void _updateBaseAtIndex(int index, String base) {
+  void _updateBaseAtIndex(int index, String base) {
     if (index >= 0 && index < dnaStrand.length) {
-      // Create a *new* list with the updated item
-      List<NitrogenousBase> newDnaStrand = List.from(dnaStrand); // Create a copy
+      String correctBase = "";
+      switch (dnaStrand[index].baseType) {
+        case "A":
+          correctBase = "T";
+          break;
+        case "T":
+          correctBase = "A";
+          break;
+        case "C":
+          correctBase = "G";
+          break;
+        case "G":
+          correctBase = "C";
+          break;
+      }
+
+      List<NitrogenousBase> newDnaStrand = List.from(dnaStrand);
       newDnaStrand[index] = NitrogenousBase(
         baseType: dnaStrand[index].baseType,
         baseChosen: base,
-      ); // Update the copy
+      );
       setState(() {
-        dnaStrand = newDnaStrand; // Assign the new list to dnaStrand
+        dnaStrand = newDnaStrand;
+        if (base == correctBase) {
+          score += 100;
+        } else {
+          score -= 50;
+        }
         answerItem++;
         if (answerItem >= dnaStrand.length) {
-          answerItem = dnaStrand.length - 1;
+          answerItem = dnaStrand.length -1;
         }
       });
     }
@@ -128,21 +128,38 @@ class _MyGameScreenState extends State<MyGameScreen> {
             ),
           ),
           Expanded(
-          child: Container(
-            color: const Color.fromARGB(255, 245, 131, 0),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              children: [
-                MyButton(letter: "A", function: adenine),
-                MyButton(letter: "T", function: thymine),
-                MyButton(letter: "C", function: cytosine),
-                MyButton(letter: "G", function: guanine),
-              ],
+            child: Container(
+              color: const Color.fromARGB(255, 245, 131, 0),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                children: [
+                  MyButton(letter: "A", function: adenine),
+                  MyButton(letter: "T", function: thymine),
+                  MyButton(letter: "C", function: cytosine),
+                  MyButton(letter: "G", function: guanine),
+                ],
+              ),
             ),
           ),
-        ),
+          // Display the score
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Text(
+              "Score: $score",
+              style: TextStyle(fontSize: 20, color: Colors.black),
+            ),
+          ),
+          ElevatedButton(
+            onPressed: createDNAstrand, // Call createDNAstrand to reset
+            child: const Text('Reset'),
+          ),
+
         ],
       ),
     );
   }
 }
+
+
+// nitrogenousBase.dart (No changes needed here)
+// ... (Your existing nitrogenousBase.dart code)
