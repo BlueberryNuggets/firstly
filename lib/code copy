@@ -1,0 +1,295 @@
+//GAMESCREEN 
+import "dart:math";
+import "package:firstly/bases_buttons.dart";
+import "package:flutter/material.dart";
+import "package:firstly/nitrogenous_base.dart";
+
+class MyGameScreen extends StatefulWidget {
+  const MyGameScreen({super.key});
+
+  @override
+  State<MyGameScreen> createState() => _MyGameScreenState();
+}
+
+//
+class _MyGameScreenState extends State<MyGameScreen> {
+  String baseChosen = "";
+  int answerItem = 0;
+  //DNA STRAND CREATION
+  List<NitrogenousBase> dnaStrand = [
+    NitrogenousBase(baseType: "A", baseChosen:  "",),
+    NitrogenousBase(baseType: "T", baseChosen: "",)
+  ];
+  String nucleotide = "";
+
+    // void createBases() {
+    //   setState(() {
+    //     for (int i = 0; i <= 10; i++) {
+    //     dnaStrand.elementAt(i).baseChosen == baseChosen;
+    //   }});
+    // }
+
+  void createDNAstrand() {
+    setState(
+      () {
+        int randomNumber;
+        for (int i = 0; i <= 10; i++) {
+          randomNumber = Random().nextInt(4);
+          switch (randomNumber) {
+            case 0:
+              nucleotide = "A";
+              break;
+            case 1:
+              nucleotide = "T";
+              break;
+            case 2:
+              nucleotide = "C";
+              break;
+            case 3:
+              nucleotide = "G";
+            default:
+          }
+          dnaStrand.add(NitrogenousBase(baseType: nucleotide, baseChosen: ""));
+        }
+      },
+    );
+  }
+
+  final ScrollController _scrollController1 = ScrollController();
+  int speedControl = 5;
+
+  @override
+  void initState() {
+    super.initState();
+    createDNAstrand();
+  //   WidgetsBinding.instance.addPostFrameCallback((timestamp) {
+  //     double minScrollExtent1 = _scrollController1.position.minScrollExtent;
+  //     double maxScrollExtent1 = _scrollController1.position.maxScrollExtent;
+
+  //     animateToMaxMin(maxScrollExtent1, minScrollExtent1, maxScrollExtent1,
+  //         speedControl, _scrollController1);
+  //   });
+  // }
+
+  // animateToMaxMin(double max, double min, double direction, int seconds,
+  //     ScrollController scrollController) {
+  //   scrollController
+  //       .animateTo(direction,
+  //           duration: Duration(seconds: seconds), curve: Curves.linear);
+    //     .then((value) {
+    //   direction = direction == max ? min : max;
+    //   animateToMaxMin(max, min, direction, seconds, scrollController);
+    // });
+  }
+
+  void adenine(){
+    setState(() {
+      baseChosen = "A"; 
+      updateCbase(answerItem, baseChosen);
+      answerItem += 1; 
+    });
+  }
+
+  void thymine(){
+    setState(() {
+      baseChosen = "T"; 
+      updateCbase(answerItem, baseChosen);
+      answerItem += 1; 
+    });
+  }
+
+  void guanine(){
+    setState(() {
+      baseChosen = "G"; 
+      updateCbase(answerItem, baseChosen);
+      answerItem += 1; 
+    });
+  }
+
+  void cytosine(){
+    setState(() {
+      baseChosen = "C"; 
+      updateCbase(answerItem, baseChosen);
+      answerItem += 1; 
+    });
+  }
+
+  void updateCbase(int answerItem, String baseChosen){
+    setState(() {
+      dnaStrand[answerItem].baseChosen = baseChosen; 
+    });
+  }
+   
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      body: Column(
+        children: [
+          Expanded(
+            flex: 4,
+            child: Container(
+              color: Colors.pink[200],
+              child: ListView.builder(
+                controller: _scrollController1,
+                scrollDirection: Axis.horizontal,
+                itemCount: dnaStrand.length,
+                itemBuilder: (context, index) {
+                  return dnaStrand[index];
+                },
+              ),
+            ),
+          ),
+          Expanded(
+          child: Container(
+            color: const Color.fromARGB(255, 245, 131, 0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+              children: [
+                MyButton(letter: "A", function: adenine),
+                MyButton(letter: "T", function: thymine),
+                MyButton(letter: "C", function: cytosine),
+                MyButton(letter: "G", function: guanine),
+              ],
+            ),
+          ),
+        ),
+        ],
+      ),
+    );
+  }
+}
+
+
+//BASES BUTTONS 
+
+import 'package:flutter/material.dart';
+
+class MyButton extends StatelessWidget {
+  final letter;
+  final function;
+
+  MyButton({this.letter, this.function, super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: function,
+      child: ClipRRect(
+        borderRadius: BorderRadius.circular(10),
+        child: Container(
+          color: const Color.fromARGB(255, 255, 179, 92),
+          width: 50,
+          height: 50,
+          child: Center(
+            child: DefaultTextStyle(
+              style: TextStyle(
+                  color: Colors.white, fontSize: 20, fontWeight: FontWeight.w900),
+              child: Text(letter),
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
+
+//NITROGENOUS BASES 
+import "package:flutter/material.dart";
+
+class NitrogenousBase extends StatefulWidget {
+  String baseType;
+  String baseChosen;
+  NitrogenousBase({required this.baseType, required this.baseChosen, super.key});
+ 
+  @override
+  State<NitrogenousBase> createState() => _NitrogenousBaseState();
+}
+
+class _NitrogenousBaseState extends State<NitrogenousBase> {
+  String complementaryBaseType = "";
+  List<Color> dnabaseColor = [
+    Colors.blue,
+    Colors.amber,
+    Colors.green,
+    Colors.deepPurple,
+    Colors.transparent
+  ];
+  int basecolorIndex = 0;
+  int complementcolorindex = 4;
+
+@override
+  void initState() {
+    super.initState();
+    pairingChecker();
+    answerExecutioner();
+    }
+
+  //pairing function
+  void pairingChecker() {
+    setState(() {
+      if (widget.baseType == "A") {
+        complementaryBaseType = "T";
+        basecolorIndex = 0;
+        // complementcolorindex = 1;
+      } else if (widget.baseType == "T") {
+        complementaryBaseType = "A";
+        basecolorIndex = 1;
+        // complementcolorindex = 0;
+      } else if (widget.baseType == "C") {
+        complementaryBaseType = "G";
+        basecolorIndex = 2;
+        // complementcolorindex = 3;
+      } else if (widget.baseType == "G") {
+        complementaryBaseType = "C";
+        basecolorIndex = 3;
+        // complementcolorindex = 2;
+      }
+    });
+  }
+
+  void answerExecutioner(){
+    setState(() {
+      if (widget.baseChosen == "A"){
+        complementcolorindex = 1;
+      }
+      else if (widget.baseChosen == "T"){
+        complementcolorindex = 0;
+      }
+      else if (widget.baseChosen == "C"){
+        complementcolorindex = 3;
+      }
+      else if (widget.baseChosen == "G"){
+        complementcolorindex = 2;
+      }
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    answerExecutioner();
+    return Padding(
+      padding: const EdgeInsets.all(15.0),
+      child: Column(
+        children: [
+          Container(
+            color: dnabaseColor[basecolorIndex],
+            alignment: Alignment.center,
+            width: 50,
+            height: 100,
+            child: Text(
+              widget.baseType,
+            ),
+          ),
+          Container(
+            color: dnabaseColor[complementcolorindex],
+            width: 50,
+            height: 200,
+            child: Text(widget.baseChosen),
+          ),
+        ],
+      ),
+    );
+  }
+}

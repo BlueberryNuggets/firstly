@@ -2,9 +2,9 @@ import "package:flutter/material.dart";
 
 class NitrogenousBase extends StatefulWidget {
   final String baseType;
-  final String answer;
-  const NitrogenousBase({required this.baseType, required this.answer, super.key});
- 
+  String baseChosen;
+  NitrogenousBase({required this.baseType, required this.baseChosen, super.key});
+
   @override
   State<NitrogenousBase> createState() => _NitrogenousBaseState();
 }
@@ -12,42 +12,58 @@ class NitrogenousBase extends StatefulWidget {
 class _NitrogenousBaseState extends State<NitrogenousBase> {
   String complementaryBaseType = "";
   List<Color> dnabaseColor = [
-    Colors.blue,
-    Colors.amber,
-    Colors.green,
-    Colors.deepPurple,
+    Colors.blue, //A
+    Colors.amber, //T
+    Colors.green, //C
+    Colors.deepPurple, //G
     Colors.transparent
   ];
   int basecolorIndex = 0;
   int complementcolorindex = 4;
 
-@override
+  @override
   void initState() {
     super.initState();
-    pairingChecker();
+    _updateBaseColors();
+  }
+
+ @override
+  void didUpdateWidget(covariant NitrogenousBase oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.baseChosen != widget.baseChosen) {
+      _updateBaseColors();
+    }
+  }
+
+
+  void _updateBaseColors() {
+    if (widget.baseType == "A") {
+      complementaryBaseType = "T";
+      basecolorIndex = 0;
+    } else if (widget.baseType == "T") {
+      complementaryBaseType = "A";
+      basecolorIndex = 1;
+    } else if (widget.baseType == "C") {
+      complementaryBaseType = "G";
+      basecolorIndex = 2;
+    } else if (widget.baseType == "G") {
+      complementaryBaseType = "C";
+      basecolorIndex = 3;
     }
 
-  //pairing function
-  void pairingChecker() {
-    setState(() {
-      if (widget.baseType == "A") {
-        complementaryBaseType = "T";
-        basecolorIndex = 0;
-        complementcolorindex = 1;
-      } else if (widget.baseType == "T") {
-        complementaryBaseType = "A";
-        basecolorIndex = 1;
-        complementcolorindex = 0;
-      } else if (widget.baseType == "C") {
-        complementaryBaseType = "G";
-        basecolorIndex = 2;
-        complementcolorindex = 3;
-      } else if (widget.baseType == "G") {
-        complementaryBaseType = "C";
-        basecolorIndex = 3;
-        complementcolorindex = 2;
-      }
-    });
+    if (widget.baseChosen == "A") {
+      complementcolorindex = 0;
+    } else if (widget.baseChosen == "T") {
+      complementcolorindex = 1;
+    } else if (widget.baseChosen == "C") {
+      complementcolorindex = 2;
+    } else if (widget.baseChosen == "G") {
+      complementcolorindex = 3;
+    } else {
+      complementcolorindex = 4; // Default color if baseChosen is empty
+    }
+
+    setState(() {}); // Rebuild to reflect color changes
   }
 
   @override
@@ -66,10 +82,10 @@ class _NitrogenousBaseState extends State<NitrogenousBase> {
             ),
           ),
           Container(
-            color: dnabaseColor[4],
+            color: dnabaseColor[complementcolorindex],
             width: 50,
             height: 200,
-            child: Text("?"),
+            child: Text(widget.baseChosen),
           ),
         ],
       ),
